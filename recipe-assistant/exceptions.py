@@ -14,3 +14,12 @@ class NoIngredientsError(Exception):
 
     def __init__(self, message='No ingredients are provided') -> None:
         super().__init__(message)
+
+
+class NoRecipesFound(Exception):
+    """
+    Raised when no recipes are found for the given ingredients.
+    """
+
+    def __init__(self, message='No recipes found for the given ingredients') -> None:
+        super().__init__(message)
