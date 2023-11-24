@@ -7,6 +7,7 @@ from openai import AuthenticationError, RateLimitError
 
 from exceptions import NoApiKeyError, NoIngredientsError, NoRecipesFound
 from llm import suggest_recipe
+from videos import search_video
 
 
 logging.basicConfig(level=logging.INFO)
@@ -26,14 +27,46 @@ def init():
 
         # form submission logic
         if submitted:
-            with st.spinner("Thinking..."):
+            with st.spinner("Checking for recipes..."):
                 dish, recipe, warning = ask_for_recipes(ingredients, openai_api_key)
 
     # displaying the output
     if dish:
         st.info(dish + "\n\n" + recipe)
+        show_video_list(dish)
     elif warning:
         st.warning(warning)
+
+
+def show_video_list(dish_name: str):
+    """
+    Search for recipe video in DuckDuckGo, and show the video links as a list.
+    """
+
+    video_search_results: dict[str, str] = search_video(f'{dish_name} recipe', 5)
+    if not video_search_results:
+        return
+
+    st.subheader("Have a look at these videos too. They might be useful.", divider='rainbow')
+    with st.container():
+        for res in video_search_results:
+            vid_link = res.get('content')
+            title = res.get('title')
+            small_image = res.get('images').get('small') if res.get('images') else None
+            publisher = res.get('publisher')
+            if not vid_link:
+                continue
+
+            img_col, link_col = st.columns(spec=[0.2, 0.8], gap='small')
+            with img_col:
+                if small_image:
+                    st.image(small_image, use_column_width='always')
+
+            with link_col:
+                st.write(f"[{title}]({vid_link})")
+                if publisher:
+                    st.write(f"Source: {publisher}")
+
 
 def ask_for_recipes(ingredients: str, api_key: str) -> Tuple[str, str, str]:
     """
