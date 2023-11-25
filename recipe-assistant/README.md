@@ -6,7 +6,7 @@ List the ingredients and assistant will suggest you a recipe.
 
 The required libraries can be installed using the pip command.
 
-`pip install openai langchain streamlit streamlit-tags`
+`pip install openai langchain streamlit streamlit-tags duckduckgo-search`
 
 ## How to run the app locally
 
