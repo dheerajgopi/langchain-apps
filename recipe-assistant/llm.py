@@ -25,7 +25,7 @@ def suggest_recipe(ingredients: List[str], api_key: str) -> Tuple[str, str]:
     if not list(filter(lambda x: x, list(map(lambda x: x != None and x.strip(), ingredients)))):
         raise NoIngredientsError()
 
-    chat_template_dish_name = ChatPromptTemplate.from_messages(
+    chat_template_recipe = ChatPromptTemplate.from_messages(
         [
             SystemMessage(content='You are an assistant chef who can suggest dishes based on ingredients provided.'),
             HumanMessagePromptTemplate.from_template(
@@ -45,7 +45,7 @@ def suggest_recipe(ingredients: List[str], api_key: str) -> Tuple[str, str]:
 
     llm = ChatOpenAI(model='gpt-3.5-turbo', temperature=0.5, api_key=api_key, verbose=True)
 
-    recipe_chain = LLMChain(llm=llm, prompt=chat_template_dish_name, verbose=True)
+    recipe_chain = LLMChain(llm=llm, prompt=chat_template_recipe, verbose=True)
 
     ai_output_raw = recipe_chain.run(ingredients=', '.join(ingredients))
     ai_output_json = json.loads(ai_output_raw)

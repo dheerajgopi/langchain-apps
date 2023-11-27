@@ -1,5 +1,5 @@
 import logging
-from typing import Tuple
+from typing import List, Tuple
 
 import streamlit as st
 from streamlit_tags import st_tags
@@ -68,7 +68,7 @@ def show_video_list(dish_name: str):
                     st.write(f"Source: {publisher}")
 
 
-def ask_for_recipes(ingredients: str, api_key: str) -> Tuple[str, str, str]:
+def ask_for_recipes(ingredients: List[str], api_key: str) -> Tuple[str, str, str]:
     """
     Helper function for getting the recipe from AI, and extract the text to be shown in UI.
     Various exception scenarios are also handled here, so that proper message can be shown in the UI.
